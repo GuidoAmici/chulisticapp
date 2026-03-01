@@ -1,0 +1,106 @@
+.header {
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 12px;
+}
+
+.categoryHeader h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex: 1;
+}
+
+.count {
+  background: var(--accent);
+  color: var(--primary);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.taskCard {
+  background: var(--card-bg);
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.taskCard:hover {
+  border-color: var(--primary);
+  transform: translateX(4px);
+}
+
+.taskMain {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.taskTitle {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.taskDue {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+}
+
+.tag {
+  background: var(--background);
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.empty {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+  padding: 10px 0;
+}

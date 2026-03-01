@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Item {
+  id        String   @id @default(uuid())
+  slug      String   @unique
+  type      String   // task, project, person, idea
+  title     String
+  content   String?
+  status    String?  // pending, active, complete, etc.
+  due       DateTime?
+  tags      String[]
+  metadata  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

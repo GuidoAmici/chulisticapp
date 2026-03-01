@@ -1,0 +1,70 @@
+:root {
+  --background: #fdfaf9;
+  --foreground: #2d3436;
+  --card-bg: #ffffff;
+  --primary: #f0928d;
+  --primary-hover: #e07b76;
+  --secondary: #a8d5d5;
+  --accent: #ffe8e8;
+  --text-muted: #636e72;
+  --border: #f1f2f6;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --radius: 16px;
+  --font-main: 'Segoe UI', Roboto, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+input, textarea {
+  font-family: inherit;
+  outline: none;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #dfe6e9;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b2bec3;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
