@@ -35,6 +35,22 @@ export async function getRecentActivity(limit = 5) {
   return items.slice(0, limit);
 }
 
+export async function getItem(type: string, slug: string): Promise<VaultItem | null> {
+  const res = await fetch(`${BACKEND_URL}/items`, { cache: 'no-store' });
+  if (!res.ok) return null;
+  const items = await res.json();
+  // Buscamos el item por slug. En el backend, el slug es único.
+  return items.find((i: any) => i.slug === slug) || null;
+}
+
+export async function getDailyNote(date: string): Promise<VaultItem | null> {
+  // Las notas diarias las trataremos como un tipo especial 'daily'
+  const res = await fetch(`${BACKEND_URL}/items?type=daily`, { cache: 'no-store' });
+  if (!res.ok) return null;
+  const items = await res.json();
+  return items.find((i: any) => i.slug === date) || null;
+}
+
 export const getStatusLabel = (status: string | undefined, type: string) => {
   if (!status) return 'Sin estado';
   

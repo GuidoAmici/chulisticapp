@@ -1,68 +1,87 @@
 import { getTasks, getStatusLabel } from '@/lib/vault';
 import styles from './tareas.module.css';
-import { CheckCircle2, Circle, Clock, AlertCircle } from 'lucide-react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { 
+  CheckCircle2, 
+  Circle, 
+  Clock, 
+  Calendar,
+  Plus,
+  Search
+} from 'lucide-react';
 import Link from 'next/link';
 
 export default async function TareasPage() {
   const tasks = await getTasks();
-  
-  const categories = [
-    { id: 'pending', label: 'Pendientes', icon: Circle, color: '#f0928d' },
-    { id: 'in-progress', label: 'En curso', icon: Clock, color: '#94bdbf' },
-    { id: 'complete', label: 'Completadas', icon: CheckCircle2, color: '#22c55e' },
-  ];
+
+  const statusIcons: Record<string, any> = {
+    'pending': { icon: Circle, color: '#f0928d' },
+    'in-progress': { icon: Clock, color: '#94bdbf' },
+    'complete': { icon: CheckCircle2, color: '#22c55e' },
+  };
 
   return (
     <div className="fade-in">
       <header className={styles.header}>
-        <h1 className={styles.title}>Mis Tareas 📝</h1>
-        <p className={styles.subtitle}>Organiza tus pendientes y alcanza tus metas.</p>
+        <div>
+          <h1 className={styles.title}>Mis Tareas 📝</h1>
+          <p className={styles.subtitle}>Gestiona tu día y mantén el enfoque.</p>
+        </div>
+        <button className={styles.addBtn}>
+          <Plus size={20} />
+          Nueva Tarea
+        </button>
       </header>
 
-      <div className={styles.categories}>
-        {categories.map((cat) => {
-          const catTasks = tasks.filter(t => t.status === cat.id);
-          const Icon = cat.icon;
+      <div className={styles.filters}>
+        <div className={styles.searchBar}>
+          <Search size={18} />
+          <input type="text" placeholder="Buscar tareas..." />
+        </div>
+        <div className={styles.tabs}>
+          <button className={`${styles.tab} ${styles.active}`}>Todas</button>
+          <button className={styles.tab}>Pendientes</button>
+          <button className={styles.tab}>Completadas</button>
+        </div>
+      </div>
+
+      <div className={styles.grid}>
+        {tasks.map((task: any) => {
+          const statusInfo = statusIcons[task.status || 'pending'] || statusIcons.pending;
+          const StatusIcon = statusInfo.icon;
 
           return (
-            <section key={cat.id} className={styles.category}>
-              <div className={styles.categoryHeader}>
-                <Icon size={20} style={{ color: cat.color }} />
-                <h2>{cat.label}</h2>
-                <span className={styles.count}>{catTasks.length}</span>
-              </div>
-
-              <div className={styles.taskList}>
-                {catTasks.map((task) => (
-                  <Link href={`/tareas/${task.slug}`} key={task.slug} className={styles.taskCard}>
-                    <div className={styles.taskMain}>
-                      <h3 className={styles.taskTitle}>{task.title}</h3>
-                      {task.due && (
-                        <div className={styles.taskDue}>
-                          <AlertCircle size={14} />
-                          <span>Vence el {task.due}</span>
-                        </div>
-                      )}
-                    </div>
-                    {task.frontmatter.tags && (
-                      <div className={styles.tags}>
-                        {task.frontmatter.tags.map((tag: string) => (
-                          <span key={tag} className={styles.tag}>#{tag}</span>
-                        ))}
-                      </div>
-                    )}
-                  </Link>
-                ))}
-                {catTasks.length === 0 && (
-                  <p className={styles.empty}>No hay tareas aquí.</p>
+            <Link href={`/tareas/${task.slug}`} key={task.id} className={styles.card}>
+              <div className={styles.cardHeader}>
+                <div 
+                  className={styles.statusBadge} 
+                  style={{ backgroundColor: statusInfo.color + '15', color: statusInfo.color }}
+                >
+                  <StatusIcon size={14} />
+                  <span>{getStatusLabel(task.status, 'task')}</span>
+                </div>
+                {task.due && (
+                  <div className={styles.dueDate}>
+                    <Calendar size={14} />
+                    <span>{task.due}</span>
+                  </div>
                 )}
               </div>
-            </section>
+              <h3 className={styles.taskTitle}>{task.title}</h3>
+              <div className={styles.cardFooter}>
+                <div className={styles.tags}>
+                   {/* Tags removed for now as backend/frontend sync is simplified */}
+                </div>
+              </div>
+            </Link>
           );
         })}
       </div>
+
+      {tasks.length === 0 && (
+        <div className={styles.empty}>
+          <p>No hay tareas que mostrar. ¡Añade una nueva!</p>
+        </div>
+      )}
     </div>
   );
 }

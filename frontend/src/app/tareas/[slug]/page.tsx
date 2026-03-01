@@ -5,9 +5,9 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
 
-export default async function TaskDetailPage({ params }: { params: { slug: string } }) {
+export default async function TaskDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const task = await getItem('tasks', slug);
+  const task = await getItem('task', slug);
 
   if (!task) {
     notFound();
@@ -36,24 +36,14 @@ export default async function TaskDetailPage({ params }: { params: { slug: strin
               <StatusIcon size={16} />
               <span>{getStatusLabel(task.status, 'task')}</span>
             </div>
-            {task.frontmatter.due && (
+            {task.due && (
               <div className={styles.date}>
                 <Calendar size={16} />
-                <span>Vence: {task.frontmatter.due}</span>
+                <span>Vence: {task.due}</span>
               </div>
             )}
           </div>
           <h1 className={styles.title}>{task.title}</h1>
-          {task.frontmatter.tags && (
-            <div className={styles.tags}>
-              {task.frontmatter.tags.map((tag: string) => (
-                <span key={tag} className={styles.tag}>
-                  <Tag size={12} />
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
         </header>
 
         <div className={styles.content}>

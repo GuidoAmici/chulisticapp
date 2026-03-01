@@ -1,13 +1,13 @@
 import { getItem } from '@/lib/vault';
 import styles from './detail.module.css';
-import { ArrowLeft, Lightbulb, Tag } from 'lucide-react';
+import { ArrowLeft, Lightbulb } from 'lucide-react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { notFound } from 'next/navigation';
 
-export default async function IdeaDetailPage({ params }: { params: { slug: string } }) {
+export default async function IdeaDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const idea = await getItem('ideas', slug);
+  const idea = await getItem('idea', slug);
 
   if (!idea) {
     notFound();
@@ -22,20 +22,11 @@ export default async function IdeaDetailPage({ params }: { params: { slug: strin
 
       <div className={styles.container}>
         <header className={styles.header}>
-          <div className={styles.icon}>
-            <Lightbulb size={32} />
+          <div className={styles.badge}>
+            <Lightbulb size={16} />
+            <span>Idea</span>
           </div>
           <h1 className={styles.title}>{idea.title}</h1>
-          {idea.frontmatter.tags && (
-            <div className={styles.tags}>
-              {idea.frontmatter.tags.map((tag: string) => (
-                <span key={tag} className={styles.tag}>
-                  <Tag size={12} />
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
         </header>
 
         <div className={styles.content}>
