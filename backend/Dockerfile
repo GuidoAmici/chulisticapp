@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y openssl python3 make g++
 COPY package*.json ./
 COPY prisma ./prisma/
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 COPY . .
 
