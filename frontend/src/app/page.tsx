@@ -25,8 +25,8 @@ export default async function Dashboard() {
     getRecentActivity(5)
   ]);
 
-  const todayTasks = tasks.filter(t => t.status === 'pending' || t.status === 'in-progress');
-  const activeProjects = projects.filter(p => p.status === 'active');
+  const todayTasks = tasks.filter((t: any) => t.status === 'pending' || t.status === 'in-progress');
+  const activeProjects = projects.filter((p: any) => p.status === 'active');
   
   const stats = [
     { label: 'Tareas pendientes', value: todayTasks.length, icon: CheckCircle2, color: '#f0928d', href: '/tareas' },
@@ -72,14 +72,14 @@ export default async function Dashboard() {
             <Link href="/tareas" className={styles.viewAll}>Ver todas</Link>
           </div>
           <div className={styles.taskList}>
-            {todayTasks.slice(0, 5).map((task) => (
+            {todayTasks.slice(0, 5).map((task: any) => (
               <div key={task.slug} className={styles.taskItem}>
                 <div className={styles.taskCheckbox}></div>
                 <div className={styles.taskContent}>
                   <span className={styles.taskTitle}>{task.title}</span>
                   {task.due && <span className={styles.taskDue}>Vence: {task.due}</span>}
                 </div>
-                <span className={`${styles.badge} ${styles[task.status]}`}>
+                <span className={`${styles.badge} ${styles[task.status as keyof typeof styles || 'pending']}`}>
                   {getStatusLabel(task.status, 'task')}
                 </span>
               </div>
@@ -95,7 +95,7 @@ export default async function Dashboard() {
             <h2 className={styles.sectionTitle}>Actividad Reciente</h2>
           </div>
           <div className={styles.activityList}>
-            {recent.map((item) => (
+            {recent.map((item: any) => (
               <div key={item.slug} className={styles.activityItem}>
                 <div className={styles.activityDot}></div>
                 <div className={styles.activityInfo}>
