@@ -3,7 +3,7 @@
   height: 100vh;
   background: var(--card-bg);
   border-right: 1px solid var(--border);
-  padding: 24px;
+  padding: 32px 24px;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -12,14 +12,13 @@
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--primary);
-  margin-bottom: 40px;
-  padding-left: 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 48px;
+  color: var(--foreground);
 }
 
 .nav {
@@ -34,37 +33,93 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  border-radius: var(--radius);
+  border-radius: 12px;
   color: var(--text-muted);
-  transition: all 0.2s ease;
-  font-weight: 500;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
 .navItem:hover {
-  background: var(--accent);
+  background: var(--background);
   color: var(--primary);
 }
 
-.active {
-  background: var(--accent);
+.navItem.active {
+  background: var(--primary-bg);
   color: var(--primary);
+}
+
+.footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .quickCapture {
-  margin-top: auto;
   background: var(--primary);
   color: white;
+  border: none;
   padding: 14px;
-  border-radius: var(--radius);
-  font-weight: 600;
+  border-radius: 16px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: background 0.2s;
-  box-shadow: 0 4px 12px rgba(240, 146, 141, 0.3);
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 10px 20px rgba(240, 146, 141, 0.2);
 }
 
 .quickCapture:hover {
   background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+}
+
+.userName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.logoutBtn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.logoutBtn:hover {
+  background: rgba(240, 146, 141, 0.1);
+  color: #f0928d;
 }

@@ -10,10 +10,12 @@ import {
   Users, 
   Lightbulb, 
   Calendar,
-  Plus
+  Plus,
+  LogOut
 } from 'lucide-react';
 import styles from './Sidebar.module.css';
 import QuickCapture from './QuickCapture';
+import { signOut, useSession } from 'next-auth/react';
 
 const NAV_ITEMS = [
   { label: 'Tablero', href: '/', icon: LayoutDashboard },
@@ -27,6 +29,7 @@ const NAV_ITEMS = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [isCaptureOpen, setIsCaptureOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <>
@@ -56,10 +59,30 @@ export default function Sidebar() {
           })}
         </nav>
 
-        <button className={styles.quickCapture} onClick={() => setIsCaptureOpen(true)}>
-          <Plus size={20} />
-          Captura Rápida
-        </button>
+        <div className={styles.footer}>
+          <button className={styles.quickCapture} onClick={() => setIsCaptureOpen(true)}>
+            <Plus size={20} />
+            Captura Rápida
+          </button>
+
+          {session?.user && (
+            <div className={styles.userSection}>
+              <div className={styles.userInfo}>
+                {session.user.image && (
+                  <img src={session.user.image} alt="User" className={styles.avatar} />
+                )}
+                <span className={styles.userName}>{session.user.name}</span>
+              </div>
+              <button 
+                onClick={() => signOut({ callbackUrl: '/auth/signin' })} 
+                className={styles.logoutBtn}
+                title="Cerrar Sesión"
+              >
+                <LogOut size={18} />
+              </button>
+            </div>
+          )}
+        </div>
       </aside>
 
       <QuickCapture isOpen={isCaptureOpen} onClose={() => setIsCaptureOpen(false)} />
