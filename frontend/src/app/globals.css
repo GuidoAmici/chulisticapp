@@ -1,4 +1,5 @@
 :root {
+  /* Chulistic Light (Default) */
   --background: #fdfaf9;
   --foreground: #2d3436;
   --card-bg: #ffffff;
@@ -9,8 +10,23 @@
   --text-muted: #636e72;
   --border: #f1f2f6;
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --primary-bg: #fff5f5;
   --radius: 16px;
   --font-main: 'Segoe UI', Roboto, -apple-system, sans-serif;
+}
+
+[data-theme='new-haze'] {
+  --background: #1a1b26;
+  --foreground: #c0caf5;
+  --card-bg: #24283b;
+  --primary: #bb9af7;
+  --primary-hover: #9d7cd8;
+  --secondary: #7aa2f7;
+  --accent: #2ac3de;
+  --text-muted: #565f89;
+  --border: #292e42;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  --primary-bg: #2f2a4a;
 }
 
 * {
@@ -25,6 +41,7 @@ body {
   font-family: var(--font-main);
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -42,6 +59,9 @@ button {
 input, textarea {
   font-family: inherit;
   outline: none;
+  background: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
 }
 
 /* Scrollbar styling */
@@ -54,6 +74,9 @@ input, textarea {
 ::-webkit-scrollbar-thumb {
   background: #dfe6e9;
   border-radius: 10px;
+}
+[data-theme='new-haze'] ::-webkit-scrollbar-thumb {
+  background: #292e42;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #b2bec3;

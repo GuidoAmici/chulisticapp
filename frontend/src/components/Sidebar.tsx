@@ -11,7 +11,8 @@ import {
   Lightbulb, 
   Calendar,
   Plus,
-  LogOut
+  LogOut,
+  User
 } from 'lucide-react';
 import styles from './Sidebar.module.css';
 import QuickCapture from './QuickCapture';
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
   { label: 'Contactos', href: '/contactos', icon: Users },
   { label: 'Ideas', href: '/ideas', icon: Lightbulb },
   { label: 'Diario', href: '/diario', icon: Calendar },
+  { label: 'Perfil', href: '/perfil', icon: User },
 ];
 
 export default function Sidebar() {
