@@ -3,10 +3,12 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 export async function refineIdea(input: string, auth: string) {
   if (!auth) throw new Error("Auth (API Key or Token) is required");
 
-  // If it starts with 'ya29.', it's a Google OAuth token
-  const genAI = auth.startsWith('ya29.') 
-    ? new GoogleGenerativeAI(auth) // The library handles tokens passed as the first argument
-    : new GoogleGenerativeAI(auth);
+  console.log('Initializing Gemini with auth length:', auth.length);
+  
+  // If it starts with 'ya29.', it's likely a Google OAuth token.
+  // Note: The SDK constructor technically expects an API Key string.
+  // If this fails, we might need to use the REST API with the Bearer token.
+  const genAI = new GoogleGenerativeAI(auth);
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
   const prompt = `
@@ -31,14 +33,23 @@ export async function refineIdea(input: string, auth: string) {
     Input: "${input}"
   `;
 
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
-  
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error("Could not parse JSON from AI response");
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+    console.log('Gemini Response:', text);
+    
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("Could not parse JSON from AI response: " + text);
+    }
+    
+    return JSON.parse(jsonMatch[0]);
+  } catch (error: any) {
+    console.error('Gemini API Error details:', error);
+    if (error.message?.includes('API_KEY_INVALID')) {
+      throw new Error("La API Key o el Token de Google no es válido.");
+    }
+    throw error;
   }
-  
-  return JSON.parse(jsonMatch[0]);
 }

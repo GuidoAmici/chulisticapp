@@ -13,6 +13,7 @@ interface QuickCaptureProps {
 export default function QuickCapture({ isOpen, onClose }: QuickCaptureProps) {
   const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { data: session } = useSession();
 
   if (!isOpen) return null;
@@ -22,10 +23,17 @@ export default function QuickCapture({ isOpen, onClose }: QuickCaptureProps) {
     if (!input.trim() || isProcessing) return;
     
     setIsProcessing(true);
+    setError(null);
     
     try {
       const accessToken = (session as any)?.accessToken;
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      
+      if (!backendUrl) {
+        throw new Error('Configuración de servidor faltante (NEXT_PUBLIC_BACKEND_URL)');
+      }
+
+      console.log('Sending capture to:', `${backendUrl}/ai/refine`);
       
       const aiRes = await fetch(`${backendUrl}/ai/refine`, {
         method: 'POST',
@@ -36,15 +44,18 @@ export default function QuickCapture({ isOpen, onClose }: QuickCaptureProps) {
         body: JSON.stringify({ input })
       });
       
-      if (!aiRes.ok) throw new Error('AI processing failed');
+      if (!aiRes.ok) {
+        const errData = await aiRes.json().catch(() => ({}));
+        throw new Error(errData.error || 'Error en el procesamiento de IA');
+      }
       
-      // Backend now handles saving automatically
       setInput('');
       onClose();
       window.location.reload();
 
-    } catch (err) {
+    } catch (err: any) {
       console.error('Quick Capture Error:', err);
+      setError(err.message || 'Ocurrió un error inesperado');
     } finally {
       setIsProcessing(false);
     }
@@ -84,6 +95,7 @@ export default function QuickCapture({ isOpen, onClose }: QuickCaptureProps) {
           <p className={styles.hint}>
             Escribe una tarea, idea o contacto. Gemini lo clasificará automáticamente.
           </p>
+          {error && <p className={styles.errorMessage}>{error}</p>}
         </form>
       </div>
     </div>

@@ -108,6 +108,17 @@
   font-weight: 500;
 }
 
+.errorMessage {
+  font-size: 0.85rem;
+  color: #f0928d;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 8px;
+  padding: 10px;
+  background: rgba(240, 146, 141, 0.1);
+  border-radius: 12px;
+}
+
 .spinning {
   animation: spin 1s linear infinite;
 }
