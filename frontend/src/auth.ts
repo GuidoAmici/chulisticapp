@@ -9,7 +9,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
       authorization: {
         params: {
-          scope: "openid email profile https://www.googleapis.com/auth/generative-language https://www.googleapis.com/auth/generative-language.peruserquota",
+          scope: "openid email profile https://www.googleapis.com/auth/generative-language.retriever",
         },
       },
     }),
