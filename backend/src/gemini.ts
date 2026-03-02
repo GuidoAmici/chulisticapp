@@ -36,6 +36,7 @@ export async function refineIdea(input: string, auth: string) {
         headers: {
           'Authorization': `Bearer ${auth}`,
           'Content-Type': 'application/json',
+          'x-goog-user-project': 'chulisticapp'
         },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }]
