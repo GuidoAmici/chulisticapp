@@ -3,14 +3,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 export async function refineIdea(input: string, auth: string) {
   if (!auth) throw new Error("Auth (API Key or Token) is required");
 
-  console.log('Initializing Gemini with auth length:', auth.length);
-  
-  // If it starts with 'ya29.', it's likely a Google OAuth token.
-  // Note: The SDK constructor technically expects an API Key string.
-  // If this fails, we might need to use the REST API with the Bearer token.
-  const genAI = new GoogleGenerativeAI(auth);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
   const prompt = `
     Eres un asistente experto en productividad para un sistema de Segundo Cerebro.
     Analiza la siguiente idea o pensamiento y estructúralo de la mejor manera posible.
@@ -33,23 +25,61 @@ export async function refineIdea(input: string, auth: string) {
     Input: "${input}"
   `;
 
-  try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    console.log('Gemini Response:', text);
+  // Si el auth empieza por 'ya29.', es un token OAuth de Google
+  if (auth.startsWith('ya29.')) {
+    console.log('Using Google OAuth Token for Gemini API...');
+    
+    const response = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${auth}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Google API OAuth Error:', errorData);
+      throw new Error(errorData.error?.message || "Error al autenticar con Google para Gemini.");
+    }
+
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    
+    if (!text) throw new Error("La IA no devolvió contenido.");
     
     const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error("Could not parse JSON from AI response: " + text);
-    }
+    if (!jsonMatch) throw new Error("No se pudo extraer JSON de la respuesta.");
     
     return JSON.parse(jsonMatch[0]);
-  } catch (error: any) {
-    console.error('Gemini API Error details:', error);
-    if (error.message?.includes('API_KEY_INVALID')) {
-      throw new Error("La API Key o el Token de Google no es válido.");
+
+  } else {
+    // Es una API Key normal
+    console.log('Using API Key for Gemini API...');
+    const genAI = new GoogleGenerativeAI(auth);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    try {
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error("No se pudo extraer JSON de la respuesta.");
+      
+      return JSON.parse(jsonMatch[0]);
+    } catch (error: any) {
+      console.error('Gemini SDK Error:', error);
+      if (error.message?.includes('API_KEY_INVALID')) {
+        throw new Error("La API Key proporcionada no es válida.");
+      }
+      throw error;
     }
-    throw error;
   }
 }
