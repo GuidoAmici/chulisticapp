@@ -31,6 +31,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       (session as any).accessToken = token.accessToken;
       return session;
     },
+    async signIn({ account }) {
+      if (account?.provider === "google") {
+        const hasGeminiScope = account.scope?.includes('https://www.googleapis.com/auth/generative-language.peruserquota');
+        if (!hasGeminiScope) {
+          console.error("Missing Gemini Scope");
+          // Puedes personalizar esta redirección si quieres
+          return false; 
+        }
+      }
+      return true;
+    },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = !nextUrl.pathname.startsWith("/auth");
