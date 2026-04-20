@@ -12,6 +12,10 @@ RUN npm install
 
 COPY . .
 
+# DATABASE_URL is only needed for prisma generate (schema introspection), not a real DB
+ARG DATABASE_URL=postgresql://user:password@localhost:5432/chulistic
+ENV DATABASE_URL=$DATABASE_URL
+
 RUN npm run build
 
 # --- Stage de Producción ---

@@ -79,7 +79,7 @@ export default async function Dashboard() {
                   <span className={styles.taskTitle}>{task.title}</span>
                   {task.due && <span className={styles.taskDue}>Vence: {task.due}</span>}
                 </div>
-                <span className={`${styles.badge} ${styles[task.status]}`}>
+                <span className={`${styles.badge} ${task.status ? styles[task.status] : ''}`}>
                   {getStatusLabel(task.status, 'task')}
                 </span>
               </div>

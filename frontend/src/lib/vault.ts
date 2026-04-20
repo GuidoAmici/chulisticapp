@@ -8,27 +8,46 @@ export interface VaultItem {
   status?: string;
   content: string;
   due?: string;
+  frontmatter: Record<string, any>;
 }
 
-export async function getTasks() {
+export async function getTasks(): Promise<VaultItem[]> {
   const res = await fetch(`${BACKEND_URL}/items?type=task`, { cache: 'no-store' });
   if (!res.ok) return [];
   return res.json();
 }
 
-export async function getProjects() {
+export async function getProjects(): Promise<VaultItem[]> {
   const res = await fetch(`${BACKEND_URL}/items?type=project`, { cache: 'no-store' });
   if (!res.ok) return [];
   return res.json();
 }
 
-export async function getPeople() {
+export async function getPeople(): Promise<VaultItem[]> {
   const res = await fetch(`${BACKEND_URL}/items?type=person`, { cache: 'no-store' });
   if (!res.ok) return [];
   return res.json();
 }
 
-export async function getRecentActivity(limit = 5) {
+export async function getItem(type: string, slug: string): Promise<VaultItem | null> {
+  const typeMap: Record<string, string> = {
+    tasks: 'task', projects: 'project', people: 'person', ideas: 'idea', daily: 'daily',
+  };
+  const dbType = typeMap[type] ?? type;
+  const res = await fetch(`${BACKEND_URL}/items?type=${dbType}`, { cache: 'no-store' });
+  if (!res.ok) return null;
+  const items: VaultItem[] = await res.json();
+  return items.find((i) => i.slug === slug) ?? null;
+}
+
+export async function getDailyNote(date: string): Promise<VaultItem | null> {
+  const res = await fetch(`${BACKEND_URL}/items?type=daily`, { cache: 'no-store' });
+  if (!res.ok) return null;
+  const items: VaultItem[] = await res.json();
+  return items.find((i) => i.slug === date || i.title === date) ?? null;
+}
+
+export async function getRecentActivity(limit = 5): Promise<VaultItem[]> {
   const res = await fetch(`${BACKEND_URL}/items`, { cache: 'no-store' });
   if (!res.ok) return [];
   const items = await res.json();
